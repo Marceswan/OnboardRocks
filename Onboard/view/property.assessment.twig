@@ -1,0 +1,15 @@
+{% block content %}
+<ul>
+    {% if assessment %}
+        <li>Assessed total value ${{ assessment.assessed.assdttlvalue|number_format }} (${{ assessment.assessed.assdttlpersizeunit|number_format }}/square foot)</li>
+        <li>Assessed improved value ${{ assessment.assessed.assdimprvalue|number_format }} (${{ assessment.assessed.assdimprpersizeunit|number_format }}/square foot)</li>
+        <li>Assessed land value ${{ assessment.assessed.assdlandvalue|number_format }} (${{ assessment.assessed.assdlandpersizeunit|number_format }}/square foot)</li>
+        <li>Calculated total value ${{ assessment.calculations.calcttlvalue|number_format }}</li>
+        <li>Annual tax ${{ assessment.tax.taxamt|number_format }} (${{ assessment.tax.taxpersizeunit|number_format }}/square foot)</li>
+        <li>Tax year {{ assessment.tax.taxyear }}</li>
+    {% else %}
+        <li>No assessment record found ({{ statusmsg }}).</li>
+    {% endif %}
+</ul>
+{% endblock %}
+

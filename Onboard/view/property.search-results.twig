@@ -1,0 +1,116 @@
+{% extends "_base.twig" %}
+{% block content %}
+<link href="../css/style.css" rel="stylesheet">
+<div class="main">
+<input type="text" id="pac-input" class="controls" placeholder="Enter an address">
+<div id="map"></div>
+<div class="container-fluid">
+    <div class="row">
+      <div class="sidebar">
+        <div id="property-results" class="results">
+        {% if properties %}
+            {% set address1number = address1|split(' ') %}
+            <div class="alert alert-success" role="alert">
+                <form class="form-inline" role="form" action="../property-records/search" method="get" name="SetRadius">
+                      <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        {{ status.total }} properties found within
+                        <select name="radius" id="radius" class="form-control" onchange="this.form.submit()">
+                            <option {% if radius == ".01" %}selected{% endif %}>.01</option>
+                            <option {% if radius == ".02" %}selected{% endif %}>.02</option>
+                            <option {% if radius == ".05" %}selected{% endif %}>.05</option>
+                            <option {% if radius == ".1" %}selected{% endif %}>.1</option>
+                        </select>  miles of {{ address1 }} {{ address2 }}.
+                        <input type=hidden name="lat" id="lat" value="{{ lat }}">
+                        <input type=hidden name="lng" id="lng" value="{{ lng }}">
+                        <input type=hidden name="address1" id="address1" value="{{ address1 }}">
+                        <input type=hidden name="address2" id="address2" value="{{ address2 }}">
+                        <input type=hidden name="page" value="1">
+                </form>
+            </div>
+            
+            {% for property in properties %}
+                {% set addressline1number = property.address.line1|split(' ') %}
+                {% if (property.location.distance == 0) and (address1number[0] == addressline1number[0]) %}
+                    <div class="panel panel-default panel-primary">
+                {% else %}    
+                    <div class="panel panel-default">
+                {% endif %}
+                        <input name="lat" value="{{ property.location.latitude }}" type="hidden">
+                        <input name="lng" value="{{ property.location.longitude }}" type="hidden">
+                        <input name="address1" value="{{ property.address.line1 }}" type="hidden">
+                        <input name="address2" value="{{ property.address.line2 }}" type="hidden">
+                        <div class="panel-heading"><strong>{{ property.address.oneLine }}</strong></div>
+                        <div class="panel-body">
+                            <ul>
+                                <li>Description
+                                    <ul><li>{{ property.summary.propclass }}</li>
+                                        <li>Built in {{ property.summary.yearbuilt }}</li>
+                                    </ul>
+                                </li>
+                                <li>Size
+                                    <ul><li>{{ property.building.size.universalsize }} total square feet</li>
+                                        <li>{{ property.building.rooms.beds }} beds</li>
+                                        <li>{{ property.building.rooms.bathstotal }} baths</li>
+                                    </ul>
+                                </li>
+                                <li><a href="#" onclick="GetSalesHistory('{{ property.identifier.obPropId }}');">Sales History</a><span class="caret"></span>
+                                    <div id="sales-history-{{ property.identifier.obPropId }}" class="results"></div>
+                                </li>
+                                <li><a href="#" onclick="GetAssessment('{{ property.identifier.obPropId }}');">County Tax Assessement</a><span class="caret"></span>
+                                    <div id="assessment-{{ property.identifier.obPropId }}" class="results"></div>
+                                </li>   
+                                <li><a href="#" onclick="GetAVM('{{ property.identifier.obPropId }}');">Automated Valuation Model (AVM)</a><span class="caret"></span>
+                                    <div id="avm-{{ property.identifier.obPropId }}" class="results"></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+            {% endfor %}
+            
+            {% if status.total > 10 %}
+                <div class="pagination pull-right">
+                    {% set totalPages = (status.total/10)|round(0, 'ceil') %}
+                      
+                    {% include 'pagination.html.twig' with {
+                        currentFilters: { myFilter: filtervariables },
+                        currentPage: page,
+                        paginationPath: '../property-records/search?address1='~address1~'&address2='~address2~'&lat='~lat~'&lng='~lng~'&radius='~radius~'&page=',
+                        lastPage: totalPages,
+                        showAlwaysFirstAndLast: true
+                    } only %}
+                </div>
+            {% endif %}
+        
+        {% else %}
+            <div class="alert alert-danger" role="alert">
+                <form class="form-inline" role="form" action="../property-records/search" method="get" name="SetRadius">
+                      <div class="form-group"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        No property records found within
+                        <select name="radius" id="radius" class="form-control" onchange="this.form.submit()">
+                            <option {% if radius == ".01" %}selected{% endif %}>.01</option>
+                            <option {% if radius == ".02" %}selected{% endif %}>.02</option>
+                            <option {% if radius == ".05" %}selected{% endif %}>.05</option>
+                            <option {% if radius == ".1" %}selected{% endif %}>.1</option>
+                        </select>  miles of {{ address1 }} {{ address2 }}.
+                        <br>({{ statusmsg }})
+                        <input type=hidden name="lat" id="lat" value="{{ lat }}">
+                        <input type=hidden name="lng" id="lng" value="{{ lng }}">
+                        <input type=hidden name="address1" id="address1" value="{{ address1 }}">
+                        <input type=hidden name="address2" id="address2" value="{{ address2 }}">
+                        <input type=hidden name="page" value="1">
+                      </div>
+                </form>
+            </div>
+        {% endif %}
+        </div>
+        <div class="footer-attribution"><a href="http://onboardinformatics.com" target="_blank" title="Onboard Informatics"><img src="../images/onboard_informatics_logo.jpg" alt="Onboard Informatics" border="0" /></a>
+        <small>&copy; 2016 Onboard Informatics. All Rights Reserved.<br>All information presented on this web page is deemed reliable but is not guaranteed and should be independently verified by
+        the users of this site. Onboard Informatics makes no warranty, either expressed or implied, as to the accuracy of the data contained within or obtained from this Web Page.</small></div>
+      </div>  
+    </div>
+</div>
+</div>
+<script src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
+<!-- our JavaScript -->
+<script src="/js/search-properties.js"></script>
+{% endblock %}

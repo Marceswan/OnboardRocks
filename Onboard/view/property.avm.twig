@@ -1,0 +1,15 @@
+{% block content %}
+<ul>    
+    {% if avm %}
+        <li>Automated Value ${{ avm.amount.value|number_format }} (${{ avm.calculations.perSizeUnit|number_format }}/square foot)</li>
+        <li>Between ${{ avm.amount.low|number_format }} - ${{ avm.amount.high|number_format }} (${{ avm.amount.valueRange|number_format }} Range)</li>
+        <li>Confidence Score {{ avm.amount.scr }}</li>
+        <li>Generated {{ avm.eventDate|date }}</li>
+        <li>Changed {{ avm.calculations.monthlyChgPct }}% (${{ avm.calculations.monthlyChgValue|number_format }}) since previous month </li>
+        <li>Taxes to AVM Ratio {{ avm.calculations.ratioTaxAmt }}</li>
+        <li>Taxes to Market Value Ratio {{ avm.calculations.ratioTaxValue }}</li>
+    {% else %}
+        <li>No avm record found ({{ statusmsg }}).</li>
+    {% endif %}
+</ul>
+{% endblock %}

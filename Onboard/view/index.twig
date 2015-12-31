@@ -1,0 +1,27 @@
+{% extends "_base.twig" %}
+{% block content %}
+<!-- Custom styles for this template -->
+<link href="../css/cover.css" rel="stylesheet">
+<div class="site-wrapper">
+    <div class="site-wrapper-inner">
+      <div class="cover-container">
+        <div class="inner cover">
+          <h1 class="cover-heading">Onboard Informatics</h1>
+          <p class="lead">This is a live demonstration of <a href="https://developer.onboard-apis.com/" target="_blank" title="US Property Records API">Onboard's Property API</a>.  You can download this application on <a href="https://github.com/Ira-Monko/OnboardRocks" title="Download OnboardRocks on GitHub" target="_blank">GitHub</a>.  It is based on 150 million
+          US property records.  To begin, start typing an address below.</p>
+          <p class="lead">
+            <input type="text" id="pac-input" class="controls" placeholder="Enter an address">
+          </p>
+        </div>
+        <div class="mastfoot">
+          <div class="inner">
+            <p>&copy; 2016 Onboard Informatics. All Rights Reserved.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<script src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initAutocomplete" async defer></script>
+<!-- our JavaScript -->
+<script src="/js/index-page.js"></script>
+{% endblock %}

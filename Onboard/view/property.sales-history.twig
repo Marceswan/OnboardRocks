@@ -1,0 +1,16 @@
+{% block content %}
+<ul>    
+    {% if salehistory %}
+        {% for sale in salehistory %}
+            <li>{{ sale.saleTransDate|date }}
+            | ${{ sale.amount.saleamt|number_format }}
+            (${{ sale.calculation.pricepersizeunit|number_format }}/sqft
+            | ${{ sale.calculation.priceperbed|number_format }}/per bedroom) 
+            | {{ sale.amount.saletranstype }}
+            </li>
+        {% endfor %}
+    {% else %}
+        <li>No sales history record found ({{ statusmsg }}).</li>
+    {% endif %}    
+</ul>
+{% endblock %}
