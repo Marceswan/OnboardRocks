@@ -24,13 +24,16 @@ etc) is not accessible.
 
 ## Requirements
 
+- Apache 2.2+
 - PHP 5.3+
 - cURL
 - mod_rewrite activated, document root routed to /public (tutorial below)
+- [Composer](https://getcomposer.org/) 
 
 Maybe useful: Simple tutorials on setting up a LAMP stack on 
 [Ubuntu 14.04 LTS](http://www.dev-metal.com/installsetup-basic-lamp-stack-linux-apache-mysql-php-ubuntu-14-04-lts/)
-and [12.04 LTS](http://www.dev-metal.com/setup-basic-lamp-stack-linux-apache-mysql-php-ubuntu-12-04/).
+and [12.04 LTS](http://www.dev-metal.com/setup-basic-lamp-stack-linux-apache-mysql-php-ubuntu-12-04/), [Windows/WAMP](http://www.wampserver.com/en/),
+or [OSX/Homebrew](https://guynathan.com/install-lamp-stack-on-mavericks-with-homebrew-with-php-mcrypt).
 
 ## Screenshot
 
@@ -40,8 +43,7 @@ and [12.04 LTS](http://www.dev-metal.com/setup-basic-lamp-stack-linux-apache-mys
 
 ##### 1. Activate mod_rewrite and ...
 
-Tutorials for [Ubuntu 14.04 LTS](http://www.dev-metal.com/enable-mod_rewrite-ubuntu-14-04-lts/) and 
-[Ubuntu 12.04 LTS](http://www.dev-metal.com/enable-mod_rewrite-ubuntu-12-04-lts/).
+Tutorials for [Apache2](http://stackoverflow.com/questions/869092/how-to-enable-mod-rewrite-for-apache-2-2).
  
 ##### 2. ... route all requests to /public folder of the script
  
@@ -58,6 +60,81 @@ Do a `composer install` in the project's root folder to fetch the dependencies (
 
 Sign up for developer access to Onboard's Property API here, https://developer.onboard-apis.com/  Once your account is created
 log in and go to Account >> Applications.  Create a new application.  Copy the API Key and paste into "THE CONFIGS" section of /public/index.php
+
+## Usage
+
+This application is built using the MVC paradigm so that the routing, data accees, and presentation layer are all decoupled.  This should enable you
+to more easily modify it to suit your needs.  Here is what the flow looks like:
+
+##### 1. Controller
+
+Load the index page (/public/index.php):
+
+```php
+$app->get('/', function () use ($app) {
+    $app->render('index.twig');
+});
+``` 
+
+Load property records search results page:
+
+```php
+$app->get('/search', function () use ($app) {
+    $app->render('property-records.twig');
+});
+```
+
+##### 2. Model
+
+The data access layer which makes all of the calls to Onboard's Property API via a cURL function.
+
+Load property records search results page (/Onboard/Model/Model.php):
+
+```php
+     * Property Search by Address
+     * Return summary of properties within a radius of an address
+     * @param $address1, $address2, $radius
+     * @return JSON
+     
+    public function searchPropertyByAddress($address1, $address2, $radius, $page)
+    {
+	$address1 = urlencode($address1);
+	$address2 = urlencode($address2);
+  
+	$url = $this->obpropapiurl . "property/snapshot?address1=" . $address1 . "&address2=" . $address2 . "&radius=" . $radius . "&page=" . $page . "&orderBy=distance%20asc";
+    
+	return $this->curlOnboardAPI($url);  
+    }
+```
+
+##### 3. View
+
+The presentation layer (/Onboard/view/property.sales-history.twig).
+
+Display the property sales history:
+
+```php
+    {% block content %}
+    <ul>    
+        {% if salehistory %}
+            {% for sale in salehistory %}
+                <li>{{ sale.saleTransDate|date }}
+                | ${{ sale.amount.saleamt|number_format }}
+                (${{ sale.calculation.pricepersizeunit|number_format }}/sqft
+                | ${{ sale.calculation.priceperbed|number_format }}/per bedroom) 
+                | {{ sale.amount.saletranstype }}
+                </li>
+            {% endfor %}
+        {% else %}
+            <li>No sales history record found ({{ statusmsg }}).</li>
+        {% endif %}    
+    </ul>
+    {% endblock %}
+```
+
+##### 4. Application Flow Diagram
+
+[![Onboard Rocks - US Property Records Open Source Application](Onboard/_install/onboard-rocks-flow-diagram.png)]
 
 #### Scripts used
 
@@ -79,6 +156,7 @@ http://www.mullie.eu/dont-build-your-own-minifier/
 ## Change log
 
 12/31/2015 - Initial Commit
+1/13/16 - Updated Readme
 
 
 ## Support
