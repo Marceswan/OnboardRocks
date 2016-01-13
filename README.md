@@ -64,7 +64,7 @@ log in and go to Account >> Applications.  Create a new application.  Copy the A
 ## Usage
 
 This application is built using the MVC paradigm so that the routing, data access, and presentation layer are all decoupled.  This should enable you
-to more easily modify it to suit your needs.  Here is what the flow looks like:
+to more easily modify it to suit your needs.
 
 ##### 1. Controller
 
@@ -134,7 +134,7 @@ Display the property sales history:
 
 ##### 4. Application Flow Diagram
 
-[![Onboard Rocks - US Property Records Open Source Application](Onboard/_install/onboard-rocks-flow-diagram.png)]
+![Onboard Rocks - US Property Records Open Source Application](Onboard/_install/onboard-rocks-flow-diagram.png)
 
 #### Scripts used
 
@@ -155,8 +155,8 @@ http://www.mullie.eu/dont-build-your-own-minifier/
 
 ## Change log
 
-12/31/2015 - Initial Commit
-1/13/16 - Updated Readme
+-12/31/2015 - Initial Commit
+-1/13/16 - Updated Readme
 
 
 ## Support
