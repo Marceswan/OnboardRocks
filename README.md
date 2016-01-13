@@ -63,7 +63,7 @@ log in and go to Account >> Applications.  Create a new application.  Copy the A
 
 ## Usage
 
-This application is built using the MVC paradigm so that the routing, data accees, and presentation layer are all decoupled.  This should enable you
+This application is built using the MVC paradigm so that the routing, data access, and presentation layer are all decoupled.  This should enable you
 to more easily modify it to suit your needs.  Here is what the flow looks like:
 
 ##### 1. Controller
