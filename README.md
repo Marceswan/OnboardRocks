@@ -155,8 +155,8 @@ http://www.mullie.eu/dont-build-your-own-minifier/
 
 ## Change log
 
--12/31/2015 - Initial Commit
--1/13/16 - Updated Readme
+- 12/31/2015 - Initial Commit
+- 1/13/16 - Updated Readme
 
 
 ## Support
